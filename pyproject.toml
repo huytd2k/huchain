@@ -6,6 +6,8 @@ authors = ["Huy tran <huy.td183768@sis.hust.edu.vn>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+fastapi = "^0.68.1"
+uvicorn = "^0.15.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
