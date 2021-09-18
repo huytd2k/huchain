@@ -1,18 +1,21 @@
 from __future__ import annotations
 from typing import List, Union
 from time import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import hashlib
 import json
 
 
 @dataclass
 class Chain:
-    chain: List[Block] = []
-    current_transactions: List[Transaction] = []
+    chain: List[Block] = field(default_factory=list)
+    current_transactions: List[Transaction] = field(default_factory=list)
 
-    # def __post_init__(self):
-    #     self.new_block(previos_hash=1, prove=100)
+    def __len__(self):
+        return len(self.chain)
+
+    def __post_init__(self):
+        self.new_block(previous_hash=1, prove=100)
 
     def new_block(self, prove: int, previous_hash: str = None) -> Block:
         """Add new block to the chain. It will add current queued transactions
@@ -49,7 +52,7 @@ class Chain:
         """
         tx = Transaction(sender, recipient, amount)
         self.current_transactions.append(tx)
-        return self.last_block["index"] + 1
+        return self.last_block.index + 1
 
     @staticmethod
     def hash(block: Block) -> int:
@@ -57,8 +60,21 @@ class Chain:
         return hashlib.sha256(serialized_block).hexdigest()
 
     @property
-    def last_block(self) -> int:
-        pass
+    def last_block(self) -> Block:
+        return self.chain[-1]
+
+    @classmethod
+    def prove_of_work(cls, last_proof: int):
+        cur_proof = 0
+        while cls.valid_proof(last_proof, cur_proof) is False:
+            cur_proof += 1
+        return cur_proof
+
+    @classmethod
+    def valid_proof(cls, last_proof: int, proof):
+        guess = f"{last_proof}{proof}".encode()
+        guess_hash = hashlib.sha256(guess).hexdigest()
+        return guess_hash[:4] == "0000"
 
 
 @dataclass
