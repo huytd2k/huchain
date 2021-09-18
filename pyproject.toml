@@ -3,6 +3,9 @@ name = "pychain"
 version = "0.1.0"
 description = ""
 authors = ["Huy tran <huy.td183768@sis.hust.edu.vn>"]
+packages = [
+    {include="scripts", from="."}
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -13,6 +16,9 @@ uvicorn = "^0.15.0"
 pytest = "^5.2"
 black = "^21.9b0"
 mypy = "^0.910"
+
+[tool.poetry.scripts]
+server-dev = 'scripts.server:start'
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
