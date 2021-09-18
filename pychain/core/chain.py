@@ -54,11 +54,6 @@ class Chain:
         self.current_transactions.append(tx)
         return self.last_block.index + 1
 
-    @staticmethod
-    def hash(block: Block) -> int:
-        serialized_block = json.dumps(block, sort_keys=True).encode()
-        return hashlib.sha256(serialized_block).hexdigest()
-
     @property
     def last_block(self) -> Block:
         return self.chain[-1]
@@ -85,8 +80,12 @@ class Block:
     prove: int
     previous_hash: str
 
-    def __hash__(self) -> int:
-        return Chain.hash(self)
+    @property
+    def hash(self) -> int:
+        return hashlib.sha256(self.toJSON()).hexdigest()
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda b: b.__dict__, sort_keys=True).encode()
 
 
 @dataclass

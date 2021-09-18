@@ -1,4 +1,4 @@
-from pychain.core.block import Chain
+from pychain.core.chain import Block, Chain, Transaction
 from unittest import TestCase
 
 
@@ -40,3 +40,28 @@ class TestChain(TestCase):
         assert Chain.valid_proof(1, 72608)
         assert Chain.valid_proof(2, 69926)
         assert Chain.valid_proof(3, 31733)
+
+
+class TestBlock(TestCase):
+    def test_hash(self):
+        block = Block(
+            index=1,
+            timestamp=1000,
+            transactions=[
+                Transaction("abc", "cde", 1000),
+                Transaction("bcd", "efg", 1000),
+            ],
+            prove=1000,
+            previous_hash="abc",
+        )
+        block2 = Block(
+            index=1,
+            timestamp=1000,
+            transactions=[
+                Transaction("abc", "cde", 1000),
+                Transaction("bcd", "efg", 1000),
+            ],
+            prove=1000,
+            previous_hash="abc",
+        )
+        assert block.hash == block2.hash
